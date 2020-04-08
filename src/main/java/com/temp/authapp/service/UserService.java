@@ -31,12 +31,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User findByUserName(String userName) {
-        log.info("Fetch user by userName {} ", userName);
-        return userRepository.findByUserName(userName)
-                .orElseThrow( () -> new UserNotFoundException(INVALID_USER));
-    }
-
     private void validateUserDetails(UserDto userDto) {
         log.info("Validating user details {} ", userDto);
         ExceptionUtil.validateNotEmpty(userDto.getUserName(), USERNAME_EMPTY);

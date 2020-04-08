@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -31,9 +32,9 @@ public class AuthService {
     public String authenticate(UserDto userDto) {
         validateUserDetails(userDto);
         try {
-            authenticationManager.authenticate(
+            Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(userDto.getUserName(), userDto.getPassword()));
-
+            log.info("Authentication Object {} ", authentication);
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(BAD_CREDENTINALS);
         }
