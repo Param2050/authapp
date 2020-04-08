@@ -1,5 +1,6 @@
 package com.temp.authapp.controller;
 
+import com.temp.authapp.util.ResponseData;
 import com.temp.authapp.model.User;
 import com.temp.authapp.model.UserDto;
 import com.temp.authapp.service.UserService;
@@ -17,9 +18,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/create")
+    @PostMapping("users/create")
     public ResponseEntity create(@RequestBody UserDto userDto) {
         User user = userService.create(userDto);
-        return ResponseEntity.ok(user);
+        ResponseData responseData = new ResponseData(true, null, 200, user);
+        return ResponseEntity.ok(responseData);
     }
 }
