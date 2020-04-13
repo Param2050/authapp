@@ -1,16 +1,13 @@
 package com.temp.authapp.model;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class MyUserDetails implements UserDetails {
+public class CustomUserDetails implements UserDetails {
 
     private String userName;
     private String password;
@@ -18,14 +15,14 @@ public class MyUserDetails implements UserDetails {
     private List<GrantedAuthority> authorities;
 
 
-    public MyUserDetails(User user) {
+    public CustomUserDetails(User user) {
         this.userName = user.getUserName();
         this.password = user.getPassword();
         this.active = true;
         this.authorities = Arrays.asList();
     }
 
-    public MyUserDetails() {}
+    public CustomUserDetails() {}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,6 +1,6 @@
 package com.temp.authapp.service;
 
-import com.temp.authapp.exception.UserNotFoundException;
+import com.temp.authapp.exception.ResourceNotFoundException;
 import com.temp.authapp.model.User;
 import com.temp.authapp.model.UserDto;
 import com.temp.authapp.repository.UserRepository;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -81,7 +80,7 @@ public class UserService {
         log.info("Fetch user by name {} ", userName);
         ExceptionUtil.validateNotEmpty(userName, USERNAME_EMPTY);
         User user = userRepository.findByUserName(userName)
-                .orElseThrow(() -> new UserNotFoundException(INVALID_USER_NAME));
+                .orElseThrow(() -> new ResourceNotFoundException(INVALID_USER_NAME));
         return user;
     }
 }

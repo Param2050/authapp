@@ -1,6 +1,6 @@
 package com.temp.authapp.controller;
 
-import com.temp.authapp.exception.UserNotFoundException;
+import com.temp.authapp.exception.ResourceNotFoundException;
 import com.temp.authapp.exception.ValidationException;
 import com.temp.authapp.util.ResponseData;
 import org.springframework.http.HttpStatus;
@@ -13,8 +13,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public final ResponseEntity handleUserNotFoundException(UserNotFoundException ex) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public final ResponseEntity handleUserNotFoundException(ResourceNotFoundException ex) {
         ResponseData responseData = new ResponseData(false, ex.getMessage(), 400, null);
         return new ResponseEntity<>(responseData, HttpStatus.BAD_REQUEST);
     }

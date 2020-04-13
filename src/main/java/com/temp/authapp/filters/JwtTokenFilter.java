@@ -1,6 +1,6 @@
 package com.temp.authapp.filters;
 
-import com.temp.authapp.service.MyUserDetailService;
+import com.temp.authapp.service.CustomUserDetailsService;
 import com.temp.authapp.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +26,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private MyUserDetailService userDetailService;
+    private CustomUserDetailsService userDetailService;
 
 
     @Override
