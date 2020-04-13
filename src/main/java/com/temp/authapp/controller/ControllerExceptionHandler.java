@@ -6,6 +6,7 @@ import com.temp.authapp.util.ResponseData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -13,8 +14,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public final ResponseEntity handleUserNotFoundException(UsernameNotFoundException ex) {
+        ResponseData responseData = new ResponseData(false, ex.getMessage(), 400, null);
+        return new ResponseEntity<>(responseData, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
-    public final ResponseEntity handleUserNotFoundException(ResourceNotFoundException ex) {
+    public final ResponseEntity handleResourceNotFoundException(ResourceNotFoundException ex) {
         ResponseData responseData = new ResponseData(false, ex.getMessage(), 400, null);
         return new ResponseEntity<>(responseData, HttpStatus.BAD_REQUEST);
     }

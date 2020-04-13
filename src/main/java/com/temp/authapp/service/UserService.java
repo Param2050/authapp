@@ -43,7 +43,7 @@ public class UserService {
         validateUserDetails(userDto);
         log.info("Creating user : {} ", userDto);
         User user = new User();
-        user.setUserName(userDto.getUserName());
+        user.setUsername(userDto.getUsername());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         return userRepository.save(user);
     }
@@ -51,14 +51,14 @@ public class UserService {
     public String generateToken(UserDto userDto) {
         validateUserDetails(userDto);
         authenticateUser(userDto);
-        return  getJwtToken(userDto.getUserName());
+        return  getJwtToken(userDto.getUsername());
     }
 
     private void authenticateUser(UserDto userDto) {
         log.info("Authenticate user : {} ", userDto);
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userDto.getUserName(), userDto.getPassword()));
+                    new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(BAD_CREDENTINALS);
         }
@@ -72,14 +72,14 @@ public class UserService {
 
     private void validateUserDetails(UserDto userDto) {
         log.info("Validating user details {} ", userDto);
-        ExceptionUtil.validateNotEmpty(userDto.getUserName(), USERNAME_EMPTY);
+        ExceptionUtil.validateNotEmpty(userDto.getUsername(), USERNAME_EMPTY);
         ExceptionUtil.validateNotEmpty(userDto.getPassword(), PASSWORD_EMPTY);
     }
 
     public User getUserByName(String userName) {
         log.info("Fetch user by name {} ", userName);
         ExceptionUtil.validateNotEmpty(userName, USERNAME_EMPTY);
-        User user = userRepository.findByUserName(userName)
+        User user = userRepository.findByUsername(userName)
                 .orElseThrow(() -> new ResourceNotFoundException(INVALID_USER_NAME));
         return user;
     }
