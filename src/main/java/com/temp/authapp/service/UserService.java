@@ -64,9 +64,9 @@ public class UserService {
         }
     }
 
-    private String getJwtToken(String userName) {
-        log.info("Fetch token for user : {} ", userName);
-        UserDetails userDetails = userDetailService.loadUserByUsername(userName);
+    private String getJwtToken(String username) {
+        log.info("Fetch token for user : {} ", username);
+        UserDetails userDetails = userDetailService.loadUserByUsername(username);
         return jwtUtilToken.generateToken(userDetails);
     }
 
