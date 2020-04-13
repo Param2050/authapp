@@ -12,3 +12,8 @@ spring:
       host: localhost
       repositories:
         enabled: true
+
+app:
+  secret-key: JwtSecretKey
+  token:
+    expirationTimeInMs: 36000000
