@@ -7,32 +7,34 @@ import com.temp.authapp.model.UserDto;
 import com.temp.authapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/v1/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @PostMapping("/")
+    @PostMapping("/v1/users")
     public ResponseEntity create(@RequestBody UserDto userDto) {
         User user = userService.create(userDto);
         ResponseData responseData = new ResponseData(true, null, 200, user);
         return ResponseEntity.ok(responseData);
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity authenticate(@RequestBody UserDto userDto) {
-        String jwtToken = userService.authenticate(userDto);
+    @PostMapping("/v1/users/generate-token")
+    public ResponseEntity generateToken(@RequestBody UserDto userDto) {
+        String jwtToken = userService.generateToken(userDto);
         ResponseData responseData = new ResponseData(true, null, 200,
                 new AuthenticationResponse(jwtToken));
+        return ResponseEntity.ok(responseData);
+    }
+
+    @GetMapping("/v1/users/{userName}")
+    public ResponseEntity getUser(@PathVariable String userName) {
+        User user = userService.getUserByName(userName);
+        ResponseData responseData = new ResponseData(true, null, 200, user);
         return ResponseEntity.ok(responseData);
     }
 

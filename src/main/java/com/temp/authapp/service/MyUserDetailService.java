@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import static com.temp.authapp.util.Constants.INVALID_USER;
+import static com.temp.authapp.util.Constants.INVALID_USER_NAME;
 
 
 @Service
@@ -21,7 +21,7 @@ public class MyUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUserName(username)
-                .orElseThrow(() -> new UsernameNotFoundException(INVALID_USER));
+                .orElseThrow(() -> new UsernameNotFoundException(INVALID_USER_NAME));
         return new MyUserDetails(user);
     }
 }

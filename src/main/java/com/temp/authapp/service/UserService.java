@@ -42,23 +42,27 @@ public class UserService {
 
     public User create(UserDto userDto) {
         validateUserDetails(userDto);
-        log.info("Creating user with user : {} ", userDto);
+        log.info("Creating user : {} ", userDto);
         User user = new User();
         user.setUserName(userDto.getUserName());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         return userRepository.save(user);
     }
 
-    public String authenticate(UserDto userDto) {
+    public String generateToken(UserDto userDto) {
         validateUserDetails(userDto);
-        log.info("Request to authenticate user : {} ", userDto);
+        authenticateUser(userDto);
+        return  getJwtToken(userDto.getUserName());
+    }
+
+    private void authenticateUser(UserDto userDto) {
+        log.info("Authenticate user : {} ", userDto);
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(userDto.getUserName(), userDto.getPassword()));
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(BAD_CREDENTINALS);
         }
-        return  getJwtToken(userDto.getUserName());
     }
 
     private String getJwtToken(String userName) {
@@ -71,5 +75,13 @@ public class UserService {
         log.info("Validating user details {} ", userDto);
         ExceptionUtil.validateNotEmpty(userDto.getUserName(), USERNAME_EMPTY);
         ExceptionUtil.validateNotEmpty(userDto.getPassword(), PASSWORD_EMPTY);
+    }
+
+    public User getUserByName(String userName) {
+        log.info("Fetch user by name {} ", userName);
+        ExceptionUtil.validateNotEmpty(userName, USERNAME_EMPTY);
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(() -> new UserNotFoundException(INVALID_USER_NAME));
+        return user;
     }
 }
