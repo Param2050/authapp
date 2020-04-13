@@ -76,11 +76,11 @@ public class UserService {
         ExceptionUtil.validateNotEmpty(userDto.getPassword(), PASSWORD_EMPTY);
     }
 
-    public User getUserByName(String userName) {
-        log.info("Fetch user by name {} ", userName);
-        ExceptionUtil.validateNotEmpty(userName, USERNAME_EMPTY);
-        User user = userRepository.findByUsername(userName)
-                .orElseThrow(() -> new ResourceNotFoundException(INVALID_USER_NAME));
+    public User findByUsername(String username) {
+        log.info("Fetch user by name {} ", username);
+        ExceptionUtil.validateNotEmpty(username, USERNAME_EMPTY);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(INVALID_USER_NAME, username)));
         return user;
     }
 }
