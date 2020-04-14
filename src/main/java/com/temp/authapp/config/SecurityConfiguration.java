@@ -31,8 +31,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
                 .authorizeRequests().antMatchers("/v1/users/generate-token").permitAll()
-                .and()
-                .authorizeRequests().antMatchers("/v1/users").permitAll()
+                .antMatchers("/v1/users").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().and().sessionManagement()
