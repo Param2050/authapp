@@ -2,11 +2,13 @@ package com.temp.authapp.service;
 
 import com.temp.authapp.exception.ResourceNotFoundException;
 import com.temp.authapp.model.User;
-import com.temp.authapp.model.UserDto;
+import com.temp.authapp.model.UserRequestDto;
+import com.temp.authapp.model.UserResponseDto;
 import com.temp.authapp.repository.UserRepository;
 import com.temp.authapp.util.ExceptionUtil;
 import com.temp.authapp.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -38,27 +40,29 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtilToken;
 
+    @Autowired
+    private ModelMapper modelMapper;
 
-    public User create(UserDto userDto) {
-        validateUserDetails(userDto);
-        log.info("Creating user : {} ", userDto);
+    public UserResponseDto create(UserRequestDto userRequestDto) {
+        validateUserDetails(userRequestDto);
+        log.info("Creating user : {} ", userRequestDto.getUsername());
         User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        return userRepository.save(user);
+        user.setUsername(userRequestDto.getUsername());
+        user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
+        return convertToUserResponseDto(userRepository.save(user));
     }
 
-    public String generateToken(UserDto userDto) {
-        validateUserDetails(userDto);
-        authenticateUser(userDto);
-        return  getJwtToken(userDto.getUsername());
+    public String generateToken(UserRequestDto userRequestDto) {
+        validateUserDetails(userRequestDto);
+        authenticateUser(userRequestDto);
+        return  getJwtToken(userRequestDto.getUsername());
     }
 
-    private void authenticateUser(UserDto userDto) {
-        log.info("Authenticate user : {} ", userDto);
+    private void authenticateUser(UserRequestDto userRequestDto) {
+        log.info("Authenticate user : {} ", userRequestDto.getUsername());
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
+                    new UsernamePasswordAuthenticationToken(userRequestDto.getUsername(), userRequestDto.getPassword()));
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(BAD_CREDENTINALS);
         }
@@ -70,10 +74,10 @@ public class UserService {
         return jwtUtilToken.generateToken(userDetails);
     }
 
-    private void validateUserDetails(UserDto userDto) {
-        log.info("Validating user details {} ", userDto);
-        ExceptionUtil.validateNotEmpty(userDto.getUsername(), USERNAME_EMPTY);
-        ExceptionUtil.validateNotEmpty(userDto.getPassword(), PASSWORD_EMPTY);
+    private void validateUserDetails(UserRequestDto userRequestDto) {
+        log.info("Validating user details {} ", userRequestDto);
+        ExceptionUtil.validateNotEmpty(userRequestDto.getUsername(), USERNAME_EMPTY);
+        ExceptionUtil.validateNotEmpty(userRequestDto.getPassword(), PASSWORD_EMPTY);
     }
 
     public User findByUsername(String username) {
@@ -82,5 +86,9 @@ public class UserService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(INVALID_USER_NAME, username)));
         return user;
+    }
+
+    private UserResponseDto convertToUserResponseDto(User user) {
+        return modelMapper.map(user, UserResponseDto.class);
     }
 }
