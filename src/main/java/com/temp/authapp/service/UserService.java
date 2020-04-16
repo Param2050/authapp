@@ -5,6 +5,7 @@ import com.temp.authapp.model.User;
 import com.temp.authapp.model.UserRequestDto;
 import com.temp.authapp.model.UserResponseDto;
 import com.temp.authapp.repository.UserRepository;
+import com.temp.authapp.util.CustomPasswordEncoder;
 import com.temp.authapp.util.ExceptionUtil;
 import com.temp.authapp.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.temp.authapp.util.Constants.*;
@@ -29,7 +29,7 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private CustomPasswordEncoder passwordEncoder;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -45,11 +45,16 @@ public class UserService {
 
     public UserResponseDto create(UserRequestDto userRequestDto) {
         validateUserDetails(userRequestDto);
+        User user = createUser(userRequestDto);
+        return convertToUserResponseDto(userRepository.save(user));
+    }
+
+    private User createUser(UserRequestDto userRequestDto) {
         log.info("Creating user : {} ", userRequestDto.getUsername());
         User user = new User();
         user.setUsername(userRequestDto.getUsername());
         user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
-        return convertToUserResponseDto(userRepository.save(user));
+        return user;
     }
 
     public String generateToken(UserRequestDto userRequestDto) {
@@ -75,7 +80,7 @@ public class UserService {
     }
 
     private void validateUserDetails(UserRequestDto userRequestDto) {
-        log.info("Validating user details {} ", userRequestDto);
+        log.info("Validating user  ", userRequestDto.getUsername());
         ExceptionUtil.validateNotEmpty(userRequestDto.getUsername(), USERNAME_EMPTY);
         ExceptionUtil.validateNotEmpty(userRequestDto.getPassword(), PASSWORD_EMPTY);
     }

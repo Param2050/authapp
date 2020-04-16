@@ -2,6 +2,7 @@ package com.temp.authapp.config;
 
 
 import com.temp.authapp.filters.JwtTokenFilter;
+import com.temp.authapp.util.CustomPasswordEncoder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -49,4 +50,8 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
         return new ModelMapper();
     }
 
+    @Bean
+    public CustomPasswordEncoder getCustomPasswordEncoder() {
+        return new CustomPasswordEncoder();
+    }
 }
