@@ -9,7 +9,6 @@ import com.temp.authapp.util.CustomPasswordEncoder;
 import com.temp.authapp.util.ExceptionUtil;
 import com.temp.authapp.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,6 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 import static com.temp.authapp.util.Constants.*;
 
@@ -40,27 +41,13 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtilToken;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-    public UserResponseDto create(UserRequestDto userRequestDto) {
-        validateUserDetails(userRequestDto);
-        User user = createUser(userRequestDto);
-        return convertToUserResponseDto(userRepository.save(user));
-    }
-
-    private User createUser(UserRequestDto userRequestDto) {
-        log.info("Creating user : {} ", userRequestDto.getUsername());
-        User user = new User();
-        user.setUsername(userRequestDto.getUsername());
-        user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
-        return user;
-    }
 
     public String generateToken(UserRequestDto userRequestDto) {
         validateUserDetails(userRequestDto);
         authenticateUser(userRequestDto);
-        return  getJwtToken(userRequestDto.getUsername());
+        String token = getJwtToken(userRequestDto.getUsername());
+        log.info("token {} ", token);
+        return token;
     }
 
     private void authenticateUser(UserRequestDto userRequestDto) {
@@ -93,7 +80,8 @@ public class UserService {
         return user;
     }
 
-    private UserResponseDto convertToUserResponseDto(User user) {
-        return modelMapper.map(user, UserResponseDto.class);
+    public User createUser(User user) {
+        return userRepository.save(user);
     }
+
 }

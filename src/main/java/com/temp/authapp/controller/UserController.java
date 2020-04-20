@@ -1,5 +1,6 @@
 package com.temp.authapp.controller;
 
+import com.temp.authapp.facade.UserFacade;
 import com.temp.authapp.model.AuthenticationResponse;
 import com.temp.authapp.model.UserResponseDto;
 import com.temp.authapp.util.ResponseData;
@@ -18,9 +19,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserFacade userFacade;
+
     @PostMapping("/v1/users")
     public ResponseEntity create(@RequestBody UserRequestDto userRequestDto) {
-        UserResponseDto userResponseDto = userService.create(userRequestDto);
+        UserResponseDto userResponseDto = userFacade.create(userRequestDto);
         ResponseData responseData = new ResponseData(true, null, 201, userResponseDto);
         return new ResponseEntity<>(responseData, HttpStatus.CREATED);
     }
@@ -39,5 +43,4 @@ public class UserController {
         ResponseData responseData = new ResponseData(true, null, 200, user);
         return ResponseEntity.ok(responseData);
     }
-
 }
