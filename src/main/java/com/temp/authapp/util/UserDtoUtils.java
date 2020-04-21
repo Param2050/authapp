@@ -12,11 +12,4 @@ public class UserDtoUtils {
         user.setPassword(userRequestDto.getPassword());
         return user;
     }
-
-    public static UserResponseDto getUserResponseDto(User user) {
-        UserResponseDto userResponseDto = new UserResponseDto();
-        userResponseDto.setUsername(user.getUsername());
-        return userResponseDto;
-    }
-
 }

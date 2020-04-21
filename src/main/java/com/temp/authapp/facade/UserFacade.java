@@ -39,9 +39,15 @@ public class UserFacade {
 
     public UserResponseDto create(UserRequestDto userRequestDto) {
         validateUserDetails(userRequestDto);
-        userService.validateDuplicateUser(userRequestDto);
+        userService.validateDuplicateUser(userRequestDto.getUsername());
         User user = createUser(userRequestDto);
-        return UserDtoUtils.getUserResponseDto(userService.createUser(user));
+        return getUserResponseDto(userService.createUser(user));
+    }
+
+    public UserResponseDto getUserResponseDto(User user) {
+        UserResponseDto userResponseDto = new UserResponseDto();
+        userResponseDto.setUsername(user.getUsername());
+        return userResponseDto;
     }
 
     private void validateUserDetails(UserRequestDto userRequestDto) {

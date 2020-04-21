@@ -44,8 +44,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void validateDuplicateUser(UserRequestDto userRequestDto) {
-        Optional<User> user = userRepository.findByUsername(userRequestDto.getUsername());
+    public void validateDuplicateUser(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
         if(user.isPresent()) {
             throw new DuplicateUserException(DUPLICATE_USER_EXCEPTION);
         }
