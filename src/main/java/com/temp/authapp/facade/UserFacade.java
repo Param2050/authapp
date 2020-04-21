@@ -50,7 +50,7 @@ public class UserFacade {
         return userResponseDto;
     }
 
-    private void validateUserDetails(UserRequestDto userRequestDto) {
+    public void validateUserDetails(UserRequestDto userRequestDto) {
         log.info("Validating user  ", userRequestDto.getUsername());
         ExceptionUtil.validateNotEmpty(userRequestDto.getUsername(), USERNAME_EMPTY);
         ExceptionUtil.validateNotEmpty(userRequestDto.getPassword(), PASSWORD_EMPTY);
@@ -91,4 +91,10 @@ public class UserFacade {
         return jwtUtilToken.generateToken(userDetails);
     }
 
+    public UserResponseDto findUserByName(String username) {
+        log.info("Fetch user by name {} ", username);
+        ExceptionUtil.validateNotEmpty(username, USERNAME_EMPTY);
+        User user = userService.findByUsername(username);
+        return UserDtoUtils.getUserResponseDto(user);
+    }
 }

@@ -12,4 +12,8 @@ public class UserDtoUtils {
         user.setPassword(userRequestDto.getPassword());
         return user;
     }
+
+    public static UserResponseDto getUserResponseDto(User user) {
+        return new UserResponseDto(user.getUsername());
+    }
 }

@@ -3,12 +3,22 @@ package com.temp.authapp.stubs;
 import com.temp.authapp.model.User;
 import com.temp.authapp.model.UserResponseDto;
 import com.temp.authapp.util.CustomPasswordEncoder;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
+
 
 public class Stub {
 
-    @Autowired
-    private CustomPasswordEncoder customPasswordEncoder;
+    public static final String USERNAME = "Rohit";
+    public static final String PASSWORD = "rohit123";
+    public static final String EMPTY_USERNAME = "";
+
+
+    public static User getUser(User user) {
+        user.setId(UUID.randomUUID());
+        user.setUsername(USERNAME);
+        user.setPassword(new CustomPasswordEncoder().encode(PASSWORD));
+        return user;
+    }
 
     public static UserResponseDto expectedResponse(User user) {
         return new UserResponseDto(user.getUsername());

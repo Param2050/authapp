@@ -39,8 +39,8 @@ public class UserController {
 
     @GetMapping("/v1/users/{username}")
     public ResponseEntity getUser(@PathVariable String username) {
-        User user = userService.findByUsername(username);
-        ResponseData responseData = new ResponseData(true, null, 200, user);
+        UserResponseDto userResponseDto = userFacade.findUserByName(username);
+        ResponseData responseData = new ResponseData(true, null, 200, userResponseDto);
         return ResponseEntity.ok(responseData);
     }
 
