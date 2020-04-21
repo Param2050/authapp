@@ -42,9 +42,9 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
-                .authorizeRequests().antMatchers("/v1/users/generate-token").permitAll()
+                .authorizeRequests().antMatchers("/v1/users/login").permitAll()
                 .antMatchers("/v1/users").permitAll()
-                .antMatchers("/v1/client").permitAll()
+                .antMatchers("/v1/users/validate-user").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().and().sessionManagement()

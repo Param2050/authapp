@@ -29,9 +29,9 @@ public class UserController {
         return new ResponseEntity<>(responseData, HttpStatus.CREATED);
     }
 
-    @PostMapping("/v1/users/generate-token")
-    public ResponseEntity generateToken(@RequestBody UserRequestDto userRequestDto) {
-        String jwtToken = userService.generateToken(userRequestDto);
+    @PostMapping("/v1/users/login")
+    public ResponseEntity loginViaToken(@RequestBody UserRequestDto userRequestDto) {
+        String jwtToken = userFacade.login(userRequestDto);
         ResponseData responseData = new ResponseData(true, null, 200,
                 new AuthenticationResponse(jwtToken));
         return ResponseEntity.ok(responseData);
@@ -43,4 +43,5 @@ public class UserController {
         ResponseData responseData = new ResponseData(true, null, 200, user);
         return ResponseEntity.ok(responseData);
     }
+
 }

@@ -1,5 +1,6 @@
 package com.temp.authapp.controller;
 
+import com.temp.authapp.exception.DuplicateUserException;
 import com.temp.authapp.exception.ResourceNotFoundException;
 import com.temp.authapp.exception.ValidationException;
 import com.temp.authapp.util.ResponseData;
@@ -16,6 +17,12 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public final ResponseEntity handleUserNotFoundException(UsernameNotFoundException ex) {
+        ResponseData responseData = new ResponseData(false, ex.getMessage(), 400, null);
+        return new ResponseEntity<>(responseData, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicateUserException.class)
+    public final ResponseEntity handleDuplicateUserException(DuplicateUserException ex) {
         ResponseData responseData = new ResponseData(false, ex.getMessage(), 400, null);
         return new ResponseEntity<>(responseData, HttpStatus.BAD_REQUEST);
     }
