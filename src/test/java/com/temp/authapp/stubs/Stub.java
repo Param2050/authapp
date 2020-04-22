@@ -11,6 +11,8 @@ public class Stub {
     public static final String USERNAME = "Rohit";
     public static final String PASSWORD = "rohit123";
     public static final String EMPTY_USERNAME = "";
+    public static final String MISMATCH_USERNAME = "blah";
+    public static final String MISMATCH_PASSWORD = "blah123";
 
 
     public static User getUser(User user) {
